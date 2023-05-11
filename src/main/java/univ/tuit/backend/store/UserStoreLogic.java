@@ -43,7 +43,7 @@ public class UserStoreLogic implements UserStore {
 
     @Override
     public User register(String phoneNumber) {
-        UserJpo byPhoneNumber = userRepository.findByPhoneNumber(phoneNumber.substring(1, phoneNumber.length() - 1));
+        UserJpo byPhoneNumber = userRepository.findByPhoneNumber(phoneNumber.trim());
         byPhoneNumber.setStatus("ACTIVE");
         return userRepository.save(byPhoneNumber).toDomain();
     }

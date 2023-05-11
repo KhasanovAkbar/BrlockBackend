@@ -1,5 +1,6 @@
 package univ.tuit.backend.rest;
 
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +22,7 @@ public class UserController {
     @Autowired
     UserService userService;
 
-
+    @ApiOperation(value = "This method for register new user")
     @PostMapping(value = "/create")
     ResponseEntity<APIResponse> create(@RequestBody User user) throws AlreadyExistsException {
         User createUser = userService.create(user);
@@ -29,19 +30,21 @@ public class UserController {
 
     }
 
+    @ApiOperation(value = "This method register phone number who has car")
     @PutMapping(value = "/register")
-    ResponseEntity<APIResponse> register(@RequestBody String phoneNumber) {
+    ResponseEntity<APIResponse> register(@RequestParam String phoneNumber) {
         User registerUser = userService.register(phoneNumber);
         return ResponseBuilder.buildOK(registerUser, null, HttpStatus.OK);
     }
 
 
+    @ApiOperation(value = "This method is used to get the users.")
     @GetMapping(value = "/users")
     ResponseEntity<APIResponse> getAllUsers() {
         List<User> users = userService.getAllUsers();
         return ResponseBuilder.buildOK(users, null, HttpStatus.OK);
     }
-
+    @ApiOperation(value = "This method edits user info")
     @PutMapping("/edit")
     ResponseEntity<APIResponse> edit(@RequestBody EditUserRequest editUserRequest) {
         User edit = userService.edit(editUserRequest);
@@ -49,14 +52,16 @@ public class UserController {
     }
 
     @PreAuthorize("hasRole('ROLE_USER')")
+    @ApiOperation(value = "This method searches car owner phone number with car plate number")
     @PostMapping(value = "/search")
-    ResponseEntity<APIResponse> searchPhoneNumber(@RequestBody String carNumber) {
-        User search = userService.retrieve(carNumber.substring(1, carNumber.length() - 1));
+    ResponseEntity<APIResponse> searchPhoneNumber(@RequestParam String carNumber) {
+        User search = userService.retrieve(carNumber);
         return ResponseBuilder.buildOK(search, null, HttpStatus.OK);
     }
 
 
     @PreAuthorize("hasRole('ROLE_USER')")
+    @ApiOperation(value = "This method deletes user from db though id")
     @DeleteMapping(value = "/{id}")
     void delete(@PathVariable Integer id) {
         User retrieve = userService.retrieve(id);
